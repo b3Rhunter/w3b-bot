@@ -5,7 +5,7 @@ Welcome to the W3B  Builder Bot! This bot is designed to provide a series of int
 ## Features
 
 - **Ping Pong**: A simple command to check the bot's responsiveness.
-- **Message Modal**: Open a modal to send a message (Please note: Modal functionality requires a third-party library or plugin).
+- **Message Modal**: Open a modal to send a message.
 - **Ethereum Blockchain Info**: Retrieve the current block number and gas price from the Ethereum network using the Ethers.js library.
 - **OpenAI Integration**: Ask a question to OpenAI and get a response.
 
