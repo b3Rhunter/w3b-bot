@@ -35,43 +35,6 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply('Pong!');
 	}
 
-	if (interaction.commandName === 'message') {
-		if (!interaction.isChatInputCommand()) return;
-
-		if (interaction.commandName === 'message') {
-			const modal = new ModalBuilder()
-				.setCustomId('messageModal')
-				.setTitle('Message Modal');
-	
-			const messageInput = new TextInputBuilder()
-				.setCustomId('messageInput')
-				.setLabel("Send Message")
-				.setStyle(TextInputStyle.Paragraph);
-	
-			const firstActionRow = new ActionRowBuilder().addComponents(messageInput);
-	
-			modal.addComponents(firstActionRow);
-	
-			await interaction.showModal(modal);
-		} else {
-			const command = client.commands.get(interaction.commandName);
-	
-			if (!command) return;
-	
-			try {
-				await command.execute(interaction);
-			} catch (error) {
-				console.error(error);
-				if (interaction.replied || interaction.deferred) {
-					await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-				} else {
-					await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-				}
-			}
-		}
-        return;
-    }
-
     if (interaction.commandName === 'openai') {
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
@@ -88,17 +51,6 @@ client.on(Events.InteractionCreate, async interaction => {
         }
         return;
     }
-
-	if (interaction.customId === 'messageModal') {
-		try {
-			const message = interaction.fields.getTextInputValue('messageInput');
-			console.log({ message });
-			await interaction.reply({ content: message });
-		} catch(error) {
-			console.log(error)
-		}
-		return;
-	}
 	
 	if (interaction.commandName === 'ethers') {
         const command = client.commands.get(interaction.commandName);
@@ -116,6 +68,38 @@ client.on(Events.InteractionCreate, async interaction => {
         }
         return;
     }
+});
+
+client.on(Events.InteractionCreate, async interaction => {
+if (interaction.commandName === 'message') {
+	const command = client.commands.get(interaction.commandName);
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+	return;
+}
+});
+
+client.on(Events.InteractionCreate, async interaction => {
+if (interaction.customId === 'messageModal') {
+	try {
+		const message = interaction.fields.getTextInputValue('messageInput');
+		console.log({ message });
+		await interaction.reply({ content: message });
+	} catch(error) {
+		console.log(error)
+	}
+	return;
+}
 });
 
 client.login(token);
