@@ -1,4 +1,4 @@
-# w3b-bot
+# W3B Builder Bot
 
 Welcome to the W3B  Builder Bot! This bot is designed to provide a series of interactive and useful commands to enhance your Discord server experience. Below are the details of the features and how to set up your bot.
 
