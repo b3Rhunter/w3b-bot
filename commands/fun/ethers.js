@@ -3,6 +3,7 @@ const { ethers } = require('ethers');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName('ethers')
         .setDescription('Get the current block number and gas price from the Ethereum network'),

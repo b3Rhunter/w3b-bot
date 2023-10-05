@@ -6,6 +6,7 @@ const { openAIKey } = require('../../config.json');
 const openai = new OpenAI({ apiKey: openAIKey });
 
 module.exports = {
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName('openai')
         .setDescription('Ask a question to OpenAI.')

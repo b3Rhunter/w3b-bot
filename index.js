@@ -1,8 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, EmbedBuilder, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -24,32 +23,17 @@ for (const folder of commandFolders) {
 	}
 }
 
-client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-});
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-
-    const command = client.commands.get(interaction.commandName);
-    if (!command) {
-        console.log(`Unknown command: ${interaction.commandName}`);
-        await interaction.reply({ content: 'Unknown command!', ephemeral: true });
-        return;
-    }
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        const errorMessage = 'There was an error while executing this command!';
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: errorMessage, ephemeral: true }).catch(console.error);
-        } else {
-            await interaction.reply({ content: errorMessage, ephemeral: true }).catch(console.error);
-        }
-    }
-});
-
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
 client.login(token);
