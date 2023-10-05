@@ -34,7 +34,7 @@ module.exports = {
                 presence_penalty: 0,
             });
             const answer = response.choices[0].message.content.trim();
-            await interaction.editReply(answer);
+            await interaction.editReply(`**Question:** ${question}\n\n**Answer:** ${answer}`)
             console.log(response);
         } catch (error) {
             console.error(error);

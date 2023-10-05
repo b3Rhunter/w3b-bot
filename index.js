@@ -32,107 +32,24 @@ client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
-    if (!command) return;
+    if (!command) {
+        console.log(`Unknown command: ${interaction.commandName}`);
+        await interaction.reply({ content: 'Unknown command!', ephemeral: true });
+        return;
+    }
 
     try {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
+        const errorMessage = 'There was an error while executing this command!';
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.followUp({ content: errorMessage, ephemeral: true }).catch(console.error);
         } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({ content: errorMessage, ephemeral: true }).catch(console.error);
         }
     }
 });
 
-
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'openai') {
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
-
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-            } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            }
-        }
-        return;
-    }
-	
-	if (interaction.commandName === 'ethers') {
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
-
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-            } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            }
-        }
-        return;
-    }
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-if (interaction.commandName === 'message') {
-	const command = client.commands.get(interaction.commandName);
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		}
-	}
-	return;
-}
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-if (interaction.customId === 'messageModal') {
-	try {
-		const message = interaction.fields.getTextInputValue('messageInput');
-		console.log({ message });
-		await interaction.reply({ content: message });
-	} catch(error) {
-		console.log(error)
-	}
-	return;
-}
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-    if (interaction.isButton() && interaction.customId === 'reset_gas') {
-        const command = client.commands.get('ethers');
-        if (!command) return;
-
-        try {
-            await command.execute(interaction, true);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-            } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            }
-        }
-    }
-});
 
 client.login(token);
