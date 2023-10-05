@@ -1,6 +1,6 @@
 // commands/ethers.js
 const { ethers } = require('ethers');
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,48 +18,31 @@ module.exports = {
             const gasPriceGwei = ethers.utils.formatUnits(gasPrice, 'gwei');
             const gasPriceGweiInteger = parseInt(gasPriceGwei);
             console.log(gasPriceGweiInteger)
-            await interaction.reply(  
-  "content": "",
-  "tts": false,
-  "components": [
-    {
-      "type": 1,
-      "components": [
-        {
-          "style": 1,
-          "label": `Reset info`,
-          "custom_id": `reset_gas`,
-          "disabled": false,
-          "emoji": {
-            "id": null,
-            "name": `🔄`
-          },
-          "type": 2
-        }
-      ]
-    }
-  ],
-  "embeds": [
-    {
-      "type": "rich",
-      "title": `⛽ Current Gas Price ⛽`,
-      "description": "",
-      "color": 0xd56701,
-      "fields": [
-        {
-          "name": "Ethereum",
-          "value": `**Block: ${blocknumber} Gas(Gwei): ${gasPriceGweiInteger}**`
-        }
-      ],
-      "thumbnail": {
-        "url": `https://cdn.discordapp.com/attachments/894185735077363713/992315314442358834/ethBurn.gif`,
-        "height": 0,
-        "width": 0
-      }
-    }
-  ]
-});
-        );
+            
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('reset_gas')
+                        .setLabel('Reset info')
+                        .setStyle('Primary')
+                        .setEmoji('🔄')
+                );
+
+            const embed = new EmbedBuilder()
+                .setColor('#d56701')
+                .setTitle('⛽ Current Gas Price ⛽')
+                .addFields(
+                    { name: 'Ethereum', value: `**Block: ${blockNumber} Gas(Gwei): ${gasPriceGweiInteger}**` },
+                )
+                .setThumbnail('https://cdn.discordapp.com/attachments/894185735077363713/992315314442358834/ethBurn.gif');
+
+            await interaction.reply({ 
+                content: '', 
+                tts: false, 
+                components: [row], 
+                embeds: [embed]
+            });
+
         } catch (error) {
             console.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
