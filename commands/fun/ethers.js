@@ -1,6 +1,6 @@
 // commands/ethers.js
 const { ethers } = require('ethers');
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,28 +17,17 @@ module.exports = {
             const gasPriceGwei = ethers.utils.formatUnits(gasPrice, 'gwei');
             const gasPriceGweiInteger = parseInt(gasPriceGwei);
             console.log(gasPriceGweiInteger)
-            
-            const row = new ActionRowBuilder()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('reset_gas')
-                        .setLabel('Reset info')
-                        .setStyle('Primary')
-                        .setEmoji('🔄')
-                );
 
             const embed = new EmbedBuilder()
                 .setColor('#d56701')
-                .setTitle('⛽ Current Gas Price ⛽')
+                .setTitle('⛽')
                 .addFields(
-                    { name: 'Ethereum', value: `**Gas(Gwei): ${gasPriceGweiInteger}**` },
+                    { name: '\u200B', value: `Gas: **${gasPriceGweiInteger} gwei**` },
                 )
                 .setThumbnail('https://cdn.discordapp.com/attachments/894185735077363713/992315314442358834/ethBurn.gif');
-
-            await interaction.reply({ 
-                content: '', 
-                tts: false, 
-                components: [row], 
+            await interaction.reply({
+                content: '',
+                tts: false,
                 embeds: [embed]
             });
 
